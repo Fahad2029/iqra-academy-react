@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+//import logo from "../assets/images/iqra-logo.png";
 
 const links = [
   { to: "/", label: "Home", end: true },
@@ -24,11 +25,17 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-black/10 bg-white/80 backdrop-blur">
       <div className="container-max py-3 flex items-center justify-between gap-3">
-        {/* Logo */}
+         
+
         <button
           onClick={() => navigate("/")}
           className="flex items-center gap-2 font-semibold tracking-tight"
         >
+           {/* <img
+          src={logo}  
+          alt="Iqra Logo"
+          className="h-10 w-10 rounded-xl object-cover border border-primaryDark/30"
+        /> */}
           <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-white border border-primaryDark/30">
             IQA
           </span>
