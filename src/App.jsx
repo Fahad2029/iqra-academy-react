@@ -8,8 +8,7 @@ import Courses from "./pages/courses/Courses.jsx";
 import Register from "./pages/auth/Register.jsx";
 import Contact from "./pages/Contact.jsx";
 import NotFound from "./pages/NotFound.jsx";
-import Teacher from "./pages/Teacher";
-import Student from "./pages/Student";
+import VideoCall from "./components/VideoCall";
 
 
 export default function App() {
@@ -24,9 +23,9 @@ export default function App() {
           <Route path="/courses" element={<Courses />} />
           <Route path="/register" element={<Register />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/video-call" element={<VideoCall />} />
           <Route path="*" element={<NotFound />} />
-          <Route path="/teacher" element={<Teacher />} />
-        <Route path="/student" element={<Student />} />
+          
         <Route
           path="*"
           element={
