@@ -1,5 +1,5 @@
-import Banner from "../components/Banner.jsx";
-import SectionShell from "../components/SectionShell.jsx";
+import Banner from "../../components/Banner.jsx";
+import SectionShell from "../../components/SectionShell.jsx";
 
 export default function Home() {
   return (
