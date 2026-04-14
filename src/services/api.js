@@ -1,4 +1,5 @@
-const backendUrl = import.meta.env.VITE_BACKEND_URL;
+const backendUrl =
+  import.meta.env.VITE_API_URL || import.meta.env.VITE_BACKEND_URL;
 
 export const testApi = async () => {
   try {
