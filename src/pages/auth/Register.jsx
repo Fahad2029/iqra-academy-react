@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 export default function Register() {
+  const env = import.meta.env || {};
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -10,7 +11,8 @@ export default function Register() {
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const API_URL = import.meta.env.VITE_BACKEND_URL + "/api/enroll";
+  const API_BASE_URL = env.VITE_API_URL || env.VITE_BACKEND_URL || "";
+  const API_URL = API_BASE_URL ? `${API_BASE_URL}/api/enroll` : "";
   console.log(API_URL);
 
 
@@ -18,6 +20,10 @@ const onSubmit = async (e) => {
   e.preventDefault();
 
   try {
+    if (!API_URL) {
+      alert("Backend URL is missing. Please set VITE_BACKEND_URL or VITE_API_URL.");
+      return;
+    }
     const response = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
