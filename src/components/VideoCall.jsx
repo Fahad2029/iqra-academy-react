@@ -34,6 +34,7 @@ const VideoCall = () => {
   const [isRemoteScreenSharing, setIsRemoteScreenSharing] = useState(false);
   const [sharedDocument, setSharedDocument] = useState(null);
   const [isReceivingDocument, setIsReceivingDocument] = useState(false);
+  const [isOverlayFullscreen, setIsOverlayFullscreen] = useState(false);
 
   /** Display-capture tracks expose displaySurface in getSettings() (Chrome, Edge, Firefox). */
   const isScreenTrack = (track) => {
@@ -207,7 +208,11 @@ const VideoCall = () => {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({
           video: true,
-          audio: true,
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+          },
         });
         localVideoRef.current.srcObject = stream;
         localStreamRef.current = stream;
@@ -503,9 +508,9 @@ const VideoCall = () => {
   const showingLocalScreen = isScreenSharing;
 
   return (
-    <main className="main-container min-h-screen bg-slate-100 p-4">
+    <main className="main-container min-h-screen bg-slate-100 p-2 lg:p-4">
       {/* Sidebar with users */}
-      <div className="mx-auto flex max-w-[1600px] gap-4">
+      <div className="mx-auto flex w-full max-w-full lg:max-w-[1920px] gap-2 lg:gap-4 px-1 lg:px-2">
         <aside className="caller-list-wrapper w-64 shrink-0 rounded-xl border border-slate-200 bg-white p-3 shadow-sm">
           <h1 className="caller-list-heading mb-2 text-xl font-semibold text-black">
             Contacts
@@ -591,7 +596,13 @@ const VideoCall = () => {
                 ? "Receiving document..."
                 : "Shared content (visible on both browsers)"}
             </p>
-            <div className="h-[72vh] overflow-hidden rounded-md bg-black">
+            <div
+              className={
+                isRemoteScreenSharing && !showingLocalScreen && isOverlayFullscreen
+                  ? "fixed inset-0 z-[100] w-screen h-screen bg-black p-4 flex flex-col"
+                  : "relative h-[85vh] overflow-hidden rounded-md bg-black"
+              }
+            >
               {!hasActiveSharedContent && (
                 <div className="flex h-full items-center justify-center text-sm text-slate-300">
                   Start screen share or share a document after call starts.
@@ -609,13 +620,22 @@ const VideoCall = () => {
               )}
 
               {isRemoteScreenSharing && !showingLocalScreen && (
-                <video
-                  ref={remoteScreenRef}
-                  autoPlay
-                  playsInline
-                  muted
-                  className="h-full w-full object-contain"
-                />
+                <>
+                  <button
+                    onClick={() => setIsOverlayFullscreen(!isOverlayFullscreen)}
+                    className="absolute right-4 top-4 z-10 rounded bg-slate-800/80 px-4 py-2 text-sm font-medium text-white shadow hover:bg-slate-700"
+                  >
+                    <svg className="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                    {isOverlayFullscreen ? "Exit Fullscreen" : "Full Screen"}
+                  </button>
+                  <video
+                    ref={remoteScreenRef}
+                    autoPlay
+                    playsInline
+                    muted
+                    className="h-full w-full object-contain"
+                  />
+                </>
               )}
 
               {!isScreenSharing && !isRemoteScreenSharing && sharedDocument && (
